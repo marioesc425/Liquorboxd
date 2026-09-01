@@ -1,0 +1,8 @@
+<h2>Register</h2>
+<form method="post">
+    {% csrf_token %}
+    <!-- Django tag that inserts a hidden CSRF security token into the form -->
+    {{ form.as_p }}
+    <!-- renders the UserCreationForm fields (username, password, confirm password) as <p> elements -->
+    <button type="submit">Register</button>
+</form>
