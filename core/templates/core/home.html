@@ -1,0 +1,10 @@
+<h1>Welcome to Liquorboxd</h1>
+
+<!-- Django automatically makes a user object available in every template's context (as long as you're using Django's built-in auth, which you are). This checks whether the current visitor is logged in. -->
+{% if user.is_authenticated %}
+    <p>Logged in as {{ user.username }}</p>
+    <a href="{% url 'logout' %}">Logout</a>
+{% else %}
+    <a href="{% url 'login' %}">Login</a>
+    <a href="{% url 'register' %}">Register</a>
+{% endif %}
