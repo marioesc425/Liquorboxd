@@ -2,7 +2,11 @@ from django.shortcuts import render, get_object_or_404
 from .models import Spirit
 
 def spirit_list(request):
-    spirits = Spirit.objects.all()
+    query = request.GET.get('q')    
+    if query:
+        spirits = Spirit.objects.filter(name__icontains=query)
+    else:
+        spirits = Spirit.objects.all()
     return render(request, 'spirits/spirit_list.html', {'spirits': spirits})
 
 def spirit_detail(request, pk):
