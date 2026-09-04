@@ -3,7 +3,8 @@
 <ul>
 {% for spirit in spirits %}
     <li>
-        <strong>{{ spirit.name }}</strong> — {{ spirit.brand }} ({{ spirit.category }})
+        <a href="{% url 'spirit_detail' spirit.pk %}">{{ spirit.name }}</a>
+        — {{ spirit.brand }} ({{ spirit.category }})
     </li>
 {% endfor %}
 </ul>
