@@ -1,5 +1,6 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, redirect, get_object_or_404
 from .models import Spirit
+from .forms import ReviewForm
 
 def spirit_list(request):
     query = request.GET.get('q')    
@@ -12,3 +13,21 @@ def spirit_list(request):
 def spirit_detail(request, pk):
     spirit = get_object_or_404(Spirit, pk=pk)
     return render(request, 'spirits/spirit_detail.html', {'spirit': spirit})
+
+def add_review(request, pk):
+    ##pk=pk means that the primary key of the spirit is passed to the view function as an argument. This is used to retrieve the specific spirit from the database.
+    ##get_object_or_404 is a Django shortcut that retrieves an object from the database based on the given model and primary key. If the object does not exist, it raises a 404 error.
+    spirit = get_object_or_404(Spirit, pk=pk)
+    if request.method == 'POST':
+        form = ReviewForm(request.POST)
+        if form.is_valid():
+            ##Here this is establishing a relationship between the review and the user who submitted it, as well as the spirit that the review is about. The review is then saved to the database. This is presented in the spirit_detail view, which displays the details of a specific spirit along with its reviews.
+            review = form.save(commit=False)
+            review.user = request.user
+            review.spirit = spirit
+            review.save()
+            return redirect('spirit_detail', pk=spirit.pk)
+    else:
+        ##Here ReviewForm() is called to create a new instance of the form. This instance is then passed to the template context, allowing the template to render the form fields for the user to fill out.
+        form = ReviewForm()
+    return render(request, 'spirits/add_review.html', {'form': form, 'spirit': spirit})
