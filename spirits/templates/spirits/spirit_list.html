@@ -1,0 +1,9 @@
+<h1>Spirits</h1>
+
+<ul>
+{% for spirit in spirits %}
+    <li>
+        <strong>{{ spirit.name }}</strong> — {{ spirit.brand }} ({{ spirit.category }})
+    </li>
+{% endfor %}
+</ul>
