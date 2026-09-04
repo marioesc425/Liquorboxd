@@ -4,3 +4,16 @@
 <p>Category: {{ spirit.category }}</p>
 <p>ABV: {{ spirit.abv }}%</p>
 <p>{{ spirit.description }}</p>
+
+<a href="{% url 'add_review' spirit.pk %}">Write a Review</a>
+
+<h2>Reviews</h2>
+{% for review in reviews %}
+    <div>
+        <strong>{{ review.user.username }}</strong> — {{ review.rating }} 🍸
+        <p>{{ review.text }}</p>
+        <small>Tried on {{ review.date_tried }}</small>
+    </div>
+{% empty %}
+    <p>No reviews yet. Be the first!</p>
+{% endfor %}

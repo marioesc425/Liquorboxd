@@ -12,7 +12,8 @@ def spirit_list(request):
 
 def spirit_detail(request, pk):
     spirit = get_object_or_404(Spirit, pk=pk)
-    return render(request, 'spirits/spirit_detail.html', {'spirit': spirit})
+    review = spirit.review_set.all()
+    return render(request, 'spirits/spirit_detail.html', {'spirit': spirit, 'reviews': review})
 
 def add_review(request, pk):
     ##pk=pk means that the primary key of the spirit is passed to the view function as an argument. This is used to retrieve the specific spirit from the database.
