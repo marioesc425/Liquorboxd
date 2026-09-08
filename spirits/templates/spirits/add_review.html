@@ -1,7 +1,11 @@
-<h1>Review {{ spirit.name }}</h1>
+{% extends 'core/base.html' %}
 
-<form method="post">
+{% block content %}
+<h1 class="mb-4">Review {{ spirit.name }}</h1>
+
+<form method="post" style="max-width: 500px;">
     {% csrf_token %}
     {{ form.as_p }}
-    <button type="submit">Submit Review</button>
+    <button type="submit" class="btn btn-primary">Submit Review</button>
 </form>
+{% endblock %}

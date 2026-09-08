@@ -1,19 +1,27 @@
-<h1>{{ spirit.name }}</h1>
+{% extends 'core/base.html' %}
 
-<p>Brand: {{ spirit.brand }}</p>
-<p>Category: {{ spirit.category }}</p>
-<p>ABV: {{ spirit.abv }}%</p>
-<p>{{ spirit.description }}</p>
+{% block content %}
+<div class="card mb-4">
+    <div class="card-body">
+        <h1 class="card-title">{{ spirit.name }}</h1>
+        <h6 class="card-subtitle mb-2 text-muted">{{ spirit.brand }}</h6>
+        <span class="badge bg-secondary mb-3">{{ spirit.category }}</span>
+        <p><strong>ABV:</strong> {{ spirit.abv }}%</p>
+        <p>{{ spirit.description }}</p>
+        <a href="{% url 'add_review' spirit.pk %}" class="btn btn-primary">Write a Review</a>
+    </div>
+</div>
 
-<a href="{% url 'add_review' spirit.pk %}">Write a Review</a>
-
-<h2>Reviews</h2>
+<h2 class="mb-3">Reviews</h2>
 {% for review in reviews %}
-    <div>
-        <strong>{{ review.user.username }}</strong> — {{ review.rating }} 🍸
-        <p>{{ review.text }}</p>
-        <small>Tried on {{ review.date_tried }}</small>
+    <div class="card mb-3">
+        <div class="card-body">
+            <h6 class="card-title">{{ review.user.username }} — {{ review.rating }} 🍸</h6>
+            <p class="card-text">{{ review.text }}</p>
+            <small class="text-muted">Tried on {{ review.date_tried }}</small>
+        </div>
     </div>
 {% empty %}
-    <p>No reviews yet. Be the first!</p>
+    <p class="text-muted">No reviews yet. Be the first!</p>
 {% endfor %}
+{% endblock %}

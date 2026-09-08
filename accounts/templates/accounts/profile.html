@@ -1,12 +1,18 @@
-<h1>{{ request.user.username }}'s Profile</h1>
+{% extends 'core/base.html' %}
 
-<h2>My Reviews</h2>
+{% block content %}
+<h1 class="mb-4">{{ request.user.username }}'s Profile</h1>
+
+<h2 class="mb-3">My Reviews</h2>
 {% for review in reviews %}
-    <div>
-        <strong>{{ review.spirit.name }}</strong> — {{ review.rating }} 🍸
-        <p>{{ review.text }}</p>
-        <small>Tried on {{ review.date_tried }}</small>
+    <div class="card mb-3">
+        <div class="card-body">
+            <h6 class="card-title">{{ review.spirit.name }} — {{ review.rating }} 🍸</h6>
+            <p class="card-text">{{ review.text }}</p>
+            <small class="text-muted">Tried on {{ review.date_tried }}</small>
+        </div>
     </div>
 {% empty %}
-    <p>You haven't reviewed any spirits yet.</p>
+    <p class="text-muted">You haven't reviewed any spirits yet.</p>
 {% endfor %}
+{% endblock %}

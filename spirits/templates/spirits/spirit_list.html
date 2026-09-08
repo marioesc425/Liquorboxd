@@ -1,15 +1,28 @@
-<h1>Spirits</h1>
+{% extends 'core/base.html' %}
 
-<form method="get">
-    <input type="text" name="q" placeholder="Search spirits...">
-    <button type="submit">Search</button>
+{% block content %}
+<h1 class="mb-4">Spirits</h1>
+
+<form method="get" class="d-flex mb-4" style="max-width: 400px;">
+    <input type="text" name="q" class="form-control me-2" placeholder="Search spirits...">
+    <button type="submit" class="btn btn-primary">Search</button>
 </form>
 
-<ul>
+<div class="row row-cols-1 row-cols-md-3 g-4">
 {% for spirit in spirits %}
-    <li>
-        <a href="{% url 'spirit_detail' spirit.pk %}">{{ spirit.name }}</a>
-        — {{ spirit.brand }} ({{ spirit.category }})
-    </li>
+    <div class="col">
+        <div class="card h-100">
+            <div class="card-body">
+                <h5 class="card-title">{{ spirit.name }}</h5>
+                <h6 class="card-subtitle mb-2 text-muted">{{ spirit.brand }}</h6>
+                <span class="badge bg-secondary mb-2">{{ spirit.category }}</span>
+                <p class="card-text">{{ spirit.description|truncatewords:15 }}</p>
+                <a href="{% url 'spirit_detail' spirit.pk %}" class="btn btn-outline-primary btn-sm">View Details</a>
+            </div>
+        </div>
+    </div>
+{% empty %}
+    <p>No spirits found.</p>
 {% endfor %}
-</ul>
+</div>
+{% endblock %}
