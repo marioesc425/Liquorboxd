@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.forms import UserCreationForm
+from spirits.models import Review
 # Create your views here.
 
 def register(request):
@@ -15,3 +16,7 @@ def register(request):
         form = UserCreationForm()
     ##Template rendering — the form is passed into the template context so it can be displayed to the user. If there were validation errors, those will also be included in the form object and displayed in the template.
     return render(request, 'accounts/register.html', {'form': form})
+
+def profile(request):
+    reviews = Review.objects.filter(user=request.user)
+    return render(request, 'accounts/profile.html', {'reviews': reviews})

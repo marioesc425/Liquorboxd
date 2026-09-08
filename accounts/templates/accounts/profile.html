@@ -1,0 +1,12 @@
+<h1>{{ request.user.username }}'s Profile</h1>
+
+<h2>My Reviews</h2>
+{% for review in reviews %}
+    <div>
+        <strong>{{ review.spirit.name }}</strong> — {{ review.rating }} 🍸
+        <p>{{ review.text }}</p>
+        <small>Tried on {{ review.date_tried }}</small>
+    </div>
+{% empty %}
+    <p>You haven't reviewed any spirits yet.</p>
+{% endfor %}
