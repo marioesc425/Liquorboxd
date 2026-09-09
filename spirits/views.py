@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import Spirit
 from .forms import ReviewForm
+from django.contrib.auth.decorators import login_required
 
 def spirit_list(request):
     query = request.GET.get('q')    
@@ -15,6 +16,7 @@ def spirit_detail(request, pk):
     review = spirit.review_set.all()
     return render(request, 'spirits/spirit_detail.html', {'spirit': spirit, 'reviews': review})
 
+@login_required
 def add_review(request, pk):
     ##pk=pk means that the primary key of the spirit is passed to the view function as an argument. This is used to retrieve the specific spirit from the database.
     ##get_object_or_404 is a Django shortcut that retrieves an object from the database based on the given model and primary key. If the object does not exist, it raises a 404 error.
