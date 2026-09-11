@@ -2,6 +2,9 @@ from django.shortcuts import render, redirect, get_object_or_404
 from .models import Spirit
 from .forms import ReviewForm
 from django.contrib.auth.decorators import login_required
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+from .serializers import SpiritSerializer
 
 def spirit_list(request):
     query = request.GET.get('q')    
@@ -34,3 +37,15 @@ def add_review(request, pk):
         ##Here ReviewForm() is called to create a new instance of the form. This instance is then passed to the template context, allowing the template to render the form fields for the user to fill out.
         form = ReviewForm()
     return render(request, 'spirits/add_review.html', {'form': form, 'spirit': spirit})
+
+@api_view(['GET'])
+def spirit_list_api(request):
+    spirits = Spirit.objects.all()
+    serializer = SpiritSerializer(spirits, many=True)
+    return Response(serializer.data)
+
+@api_view(['GET'])
+def spirit_detail_api(request, pk):
+    spirit = get_object_or_404(Spirit, pk=pk)
+    serializer = SpiritSerializer(spirit)
+    return Response(serializer.data)
