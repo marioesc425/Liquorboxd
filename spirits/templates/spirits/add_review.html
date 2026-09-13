@@ -5,7 +5,95 @@
 
 <form method="post" style="max-width: 500px;">
     {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit" class="btn btn-primary">Submit Review</button>
+
+    <label class="form-label d-block">Your Rating</label>
+    <div id="martini-rating" class="mb-3">
+        {% for i in "12345" %}
+            <span class="martini-icon" data-index="{{ i }}">
+                <svg width="32" height="32" viewBox="0 0 24 24">
+                    <polygon points="2,3 22,3 12,13" fill="none" stroke="black" stroke-width="1.5" stroke-linejoin="round"/>
+                    <line x1="12" y1="13" x2="12" y2="20" stroke="black" stroke-width="1.5"/>
+                    <line x1="7" y1="20" x2="17" y2="20" stroke="black" stroke-width="1.5"/>
+                </svg>
+                <span class="martini-fill">
+                    <svg width="32" height="32" viewBox="0 0 24 24">
+                        <polygon points="2,3 22,3 12,13" fill="black" stroke="black" stroke-width="1.5" stroke-linejoin="round"/>
+                        <line x1="12" y1="13" x2="12" y2="20" stroke="black" stroke-width="1.5"/>
+                        <line x1="7" y1="20" x2="17" y2="20" stroke="black" stroke-width="1.5"/>
+                    </svg>
+                </span>
+            </span>
+        {% endfor %}
+    </div>
+
+    {{ form.rating }}
+    {{ form.text.label_tag }} {{ form.text }}
+    {{ form.date_tried.label_tag }} {{ form.date_tried }}
+
+    <button type="submit" class="btn btn-primary mt-3">Submit Review</button>
 </form>
+
+<style>
+    .martini-icon {
+        position: relative;
+        display: inline-block;
+        width: 32px;
+        height: 32px;
+        margin-right: 6px;
+        cursor: pointer;
+    }
+    .martini-icon svg {
+        position: absolute;
+        top: 0;
+        left: 0;
+    }
+    .martini-fill {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 0%;
+        height: 100%;
+        overflow: hidden;
+    }
+</style>
+
+<script>
+    const hiddenInput = document.getElementById('id_rating');
+    const icons = document.querySelectorAll('.martini-icon');
+
+    function renderRating(value) {
+        icons.forEach(icon => {
+            const index = parseFloat(icon.dataset.index);
+            const fill = icon.querySelector('.martini-fill');
+            if (value >= index) {
+                fill.style.width = '100%';
+            } else if (value >= index - 0.5) {
+                fill.style.width = '50%';
+            } else {
+                fill.style.width = '0%';
+            }
+        });
+    }
+
+    icons.forEach(icon => {
+        icon.addEventListener('click', () => {
+            const index = parseFloat(icon.dataset.index);
+            let current = parseFloat(hiddenInput.value) || 0;
+            let newValue;
+
+            if (current === index) {
+                newValue = index - 0.5;
+            } else if (current === index - 0.5) {
+                newValue = index - 1;
+            } else {
+                newValue = index;
+            }
+
+            hiddenInput.value = newValue;
+            renderRating(newValue);
+        });
+    });
+
+    renderRating(parseFloat(hiddenInput.value) || 0);
+</script>
 {% endblock %}
