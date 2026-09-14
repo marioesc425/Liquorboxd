@@ -1,18 +1,302 @@
 {% extends 'core/base.html' %}
 
 {% block content %}
-<h1 class="mb-4">{{ request.user.username }}'s Profile</h1>
 
-<h2 class="mb-3">My Reviews</h2>
-{% for review in reviews %}
-    <div class="card mb-3">
-        <div class="card-body">
-            <h6 class="card-title">{{ review.spirit.name }} — {{ review.rating }} 🍸</h6>
-            <p class="card-text">{{ review.text }}</p>
-            <small class="text-muted">Tried on {{ review.date_tried }}</small>
-        </div>
+<div class="text-center mb-4">
+    <div class="mx-auto mb-3 d-flex align-items-center justify-content-center bg-dark text-white rounded-circle" style="width: 100px; height: 100px; font-size: 2.5rem;">
+        {{ user.username|slice:":1"|upper }}
     </div>
-{% empty %}
-    <p class="text-muted">You haven't reviewed any spirits yet.</p>
+
+```
+<h3 class="mb-1">{{ user.username }}</h3>
+<p class="text-muted">{{ user.profile.bio|default:"No bio yet." }}</p>
+```
+
+</div>
+
+<ul class="nav nav-pills nav-justified mb-4 bg-light rounded p-1">
+    <li class="nav-item">
+        <a class="nav-link active" href="{% url 'profile' %}">Profile</a>
+    </li>
+
+```
+<li class="nav-item">
+    <a class="nav-link disabled text-muted" href="#">Lists</a>
+</li>
+
+<li class="nav-item">
+    <a class="nav-link disabled text-muted" href="#">Drinklist</a>
+</li>
+```
+
+</ul>
+
+<h6 class="text-uppercase text-muted mb-3">Recent Activity</h6>
+
+<div class="row row-cols-2 row-cols-md-4 g-3">
+{% for review in reviews %}
+    <div class="col">
+        <a href="{% url 'spirit_detail' review.spirit.pk %}" class="text-decoration-none text-dark">
+            <div class="card h-100">
+
+```
+            <div class="d-flex align-items-center justify-content-center bg-secondary bg-opacity-25" style="height: 120px;">
+                <span style="font-size: 2.5rem;">🍸</span>
+            </div>
+
+            <div class="card-body p-2">
+                <p class="mb-1 small fw-bold text-truncate">
+                    {{ review.spirit.name }}
+                </p>
+
+                <div class="martini-display" data-rating="{{ review.rating }}"></div>
+
+                <small class="text-muted">{{ review.date_tried }}</small>
+            </div>
+
+        </div>
+    </a>
+</div>
+```
+
+{% empty %} <p class="text-muted">You haven't reviewed any spirits yet.</p>
 {% endfor %}
+
+</div>
+
+<!-- RATINGS -->
+
+<h6 class="text-uppercase text-muted mt-5 mb-3">Ratings</h6>
+
+<div class="rating-chart">
+    {% for d in distribution %}
+        <div class="rating-bar-wrapper">
+            <div
+                class="rating-bar"
+                style="height: {% widthratio d.count max_count 100 %}%;"
+                title="{{ d.rating }} stars: {{ d.count }}"
+            ></div>
+        </div>
+    {% endfor %}
+</div>
+
+<div class="rating-axis">
+    {% for d in distribution %}
+        <div class="rating-axis-item">
+            <div
+                class="martini-axis-icon"
+                data-rating="{{ d.rating }}"
+            ></div>
+
+```
+        <small class="text-muted">{{ d.rating }}</small>
+    </div>
+{% endfor %}
+```
+
+</div>
+
+<style>
+    /*
+     * MARTINI RATINGS
+     */
+
+    .martini-display {
+        display: flex;
+        align-items: center;
+        gap: 2px;
+    }
+
+    .martini-display svg {
+        display: block;
+    }
+
+    .martini-axis-icon {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+
+    /*
+     * RATING CHART
+     */
+
+    .rating-chart {
+        height: 120px;
+        display: flex;
+        align-items: flex-end;
+        gap: 8px;
+    }
+
+    .rating-bar-wrapper {
+        height: 100%;
+        flex: 1;
+        display: flex;
+        align-items: flex-end;
+        justify-content: center;
+    }
+
+    .rating-bar {
+        width: 100%;
+        max-width: 45px;
+        min-height: 2px;
+        background: #222;
+        border-radius: 4px 4px 0 0;
+    }
+
+    .rating-axis {
+        display: flex;
+        gap: 8px;
+        margin-top: 8px;
+    }
+
+    .rating-axis-item {
+        flex: 1;
+        text-align: center;
+    }
+</style>
+
+<script>
+    /*
+     * Creates a martini glass.
+     *
+     * fillPercent:
+     * 0   = empty
+     * 50  = half full
+     * 100 = full
+     *
+     * Only the bowl gets filled.
+     * The stem and base remain an outline.
+     */
+    function martiniSVG(fillPercent, size = 20) {
+
+        const clipId =
+            'martini-' +
+            Math.random().toString(36).substring(2, 9);
+
+        const fillWidth =
+            18 * (fillPercent / 100);
+
+        return `
+            <svg
+                width="${size}"
+                height="${size}"
+                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg"
+                aria-hidden="true"
+            >
+
+                <defs>
+                    <clipPath id="${clipId}">
+                        <polygon points="3,4 21,4 12,14"/>
+                    </clipPath>
+                </defs>
+
+
+                <!-- Empty glass outline -->
+                <polygon
+                    points="3,4 21,4 12,14"
+                    fill="none"
+                    stroke="#222"
+                    stroke-width="1.5"
+                    stroke-linejoin="round"
+                />
+
+
+                <!-- Liquid -->
+                <rect
+                    x="3"
+                    y="4"
+                    width="${fillWidth}"
+                    height="10"
+                    fill="#222"
+                    clip-path="url(#${clipId})"
+                />
+
+
+                <!-- Stem -->
+                <line
+                    x1="12"
+                    y1="14"
+                    x2="12"
+                    y2="19"
+                    stroke="#222"
+                    stroke-width="1.5"
+                    stroke-linecap="round"
+                />
+
+
+                <!-- Base -->
+                <line
+                    x1="8"
+                    y1="19"
+                    x2="16"
+                    y2="19"
+                    stroke="#222"
+                    stroke-width="1.5"
+                    stroke-linecap="round"
+                />
+
+            </svg>
+        `;
+    }
+
+
+    /*
+     * RECENT ACTIVITY RATINGS
+     *
+     * A rating of:
+     *
+     * 5     = 🍸 🍸 🍸 🍸 🍸
+     * 4.5   = 🍸 🍸 🍸 🍸 half
+     * 4     = 🍸 🍸 🍸 🍸 empty
+     * etc.
+     */
+
+    document.querySelectorAll('.martini-display').forEach(el => {
+
+        const rating = parseFloat(el.dataset.rating);
+
+        let html = '';
+
+        for (let i = 1; i <= 5; i++) {
+
+            let fillPercent = 0;
+
+            if (rating >= i) {
+                fillPercent = 100;
+            }
+            else if (rating >= i - 0.5) {
+                fillPercent = 50;
+            }
+
+            html += martiniSVG(fillPercent, 20);
+        }
+
+        el.innerHTML = html;
+    });
+
+
+    /*
+     * RATING AXIS
+     *
+     * The chart represents:
+     *
+     * 1 star
+     * 2 stars
+     * 3 stars
+     * 4 stars
+     * 5 stars
+     *
+     * Each axis label is a full martini.
+     */
+
+    document.querySelectorAll('.martini-axis-icon').forEach(el => {
+
+        el.innerHTML = martiniSVG(100, 22);
+
+    });
+</script>
+
 {% endblock %}

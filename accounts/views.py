@@ -21,4 +21,17 @@ def register(request):
 @login_required
 def profile(request):
     reviews = Review.objects.filter(user=request.user)
-    return render(request, 'accounts/profile.html', {'reviews': reviews})
+
+    possible_ratings = [0, 0.5, 1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5]
+    distribution = []
+    for rating in possible_ratings:
+        count = reviews.filter(rating=rating).count()
+        distribution.append({'rating': rating, 'count': count})
+
+    max_count = max([d['count'] for d in distribution]) if any(d['count'] for d in distribution) else 1
+
+    return render(request, 'accounts/profile.html', {
+        'reviews': reviews,
+        'distribution': distribution,
+        'max_count': max_count,
+    })
