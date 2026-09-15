@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.forms import UserCreationForm
+from accounts.forms import ProfileForm
 from spirits.models import Review
 from django.contrib.auth.decorators import login_required
 # Create your views here.
@@ -35,3 +36,15 @@ def profile(request):
         'distribution': distribution,
         'max_count': max_count,
     })
+
+def add_avatar(request):
+    currentProfile = request.user.profile
+    if request.method == 'POST':
+        form = ProfileForm(request.POST, request.FILES, instance=currentProfile)
+        if form.is_valid():
+            form.save()
+            return redirect('profile')
+    else:
+        form = ProfileForm(instance=currentProfile)
+
+    return render(request, 'accounts/add_avatar.html', {'form': form})
