@@ -1,0 +1,11 @@
+{% extends 'core/base.html' %}
+
+{% block content %}
+<h1 class="mb-4">Add a New Spirit</h1>
+
+<form method="post" enctype="multipart/form-data" style="max-width: 500px;">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="btn btn-primary mt-3">Add Spirit</button>
+</form>
+{% endblock %}

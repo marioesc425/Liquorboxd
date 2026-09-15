@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import Spirit
-from .forms import ReviewForm
+from .forms import ReviewForm, SpiritForm
 from django.contrib.auth.decorators import login_required
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
@@ -49,3 +49,14 @@ def spirit_detail_api(request, pk):
     spirit = get_object_or_404(Spirit, pk=pk)
     serializer = SpiritSerializer(spirit)
     return Response(serializer.data)
+
+@login_required
+def add_spirit(request):
+    if request.method == 'POST':
+        form = SpiritForm(request.POST, request.FILES)
+        if form.is_valid():
+            spirit = form.save()
+            return redirect('spirit_detail', pk=spirit.pk)
+    else:
+        form = SpiritForm()
+    return render(request, 'spirits/add_spirit.html', {'form': form})

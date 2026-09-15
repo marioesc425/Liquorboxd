@@ -19,6 +19,7 @@ class Spirit(models.Model):
     brand = models.CharField(max_length = 50)
     abv = models.DecimalField(max_digits=3, decimal_places=1)
     description = models.TextField(blank=True)
+    spirit_default_image = models.ImageField(upload_to='spirit_details/', blank=True, null=True)
 
     def __str__(self):
         return self.name

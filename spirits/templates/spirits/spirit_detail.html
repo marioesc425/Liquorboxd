@@ -2,12 +2,19 @@
 
 {% block content %}
 <div class="card mb-4">
+    {% if spirit.spirit_default_image %}
+    <img src="{{ spirit.spirit_default_image.url }}" class="card-img-top bg-light" style="height: 250px; width: 100%; object-fit: contain;">
+    {% endif %}
     <div class="card-body">
-        <h1 class="card-title">{{ spirit.name }}</h1>
-        <h6 class="card-subtitle mb-2 text-muted">{{ spirit.brand }}</h6>
-        <span class="badge bg-secondary mb-3">{{ spirit.category }}</span>
-        <p><strong>ABV:</strong> {{ spirit.abv }}%</p>
-        <p>{{ spirit.description }}</p>
+        <div class="d-flex justify-content-between align-items-start mb-2">
+            <div>
+                <h1 class="card-title mb-1">{{ spirit.name }}</h1>
+                <h6 class="card-subtitle text-muted">{{ spirit.brand }}</h6>
+            </div>
+            <span class="badge bg-secondary">{{ spirit.category }}</span>
+        </div>
+        <p class="mb-2"><strong>ABV:</strong> {{ spirit.abv }}%</p>
+        <p class="mb-3">{{ spirit.description }}</p>
         <a href="{% url 'add_review' spirit.pk %}" class="btn btn-primary">Write a Review</a>
     </div>
 </div>

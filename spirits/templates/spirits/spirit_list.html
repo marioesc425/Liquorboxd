@@ -2,7 +2,7 @@
 
 {% block content %}
 <h1 class="mb-4">Spirits</h1>
-
+<a href="{% url 'add_spirit' %}" class="btn btn-outline-primary mb-3">+ Add a Spirit</a>
 <form method="get" class="d-flex mb-4" style="max-width: 400px;">
     <input type="text" name="q" class="form-control me-2" placeholder="Search spirits...">
     <button type="submit" class="btn btn-primary">Search</button>
