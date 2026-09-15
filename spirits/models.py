@@ -44,6 +44,7 @@ class Review(models.Model):
     date_tried = models.DateField()
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    spirit_image = models.ImageField(upload_to='reviews/', blank=True, null=True)
 
     def __str__(self):
             return f"{self.spirit.name} review by {self.user.username}"

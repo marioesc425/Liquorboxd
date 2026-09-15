@@ -3,11 +3,11 @@
 {% block content %}
 <h1 class="mb-4">Review {{ spirit.name }}</h1>
 
-<form method="post" style="max-width: 500px;">
+<form method="post" enctype="multipart/form-data" style="max-width: 500px;">
     {% csrf_token %}
 
     <label class="form-label d-block">Your Rating</label>
-    <div id="martini-rating" class="mb-3">
+    <div id="martini-rating" class="mb-1">
         {% for i in "12345" %}
             <span class="martini-icon" data-index="{{ i }}">
                 <svg width="32" height="32" viewBox="0 0 24 24">
@@ -25,10 +25,26 @@
             </span>
         {% endfor %}
     </div>
+    {% if form.rating.errors %}
+        <div class="text-danger small mb-3">Please select a rating.</div>
+    {% endif %}
 
     {{ form.rating }}
-    {{ form.text.label_tag }} {{ form.text }}
-    {{ form.date_tried.label_tag }} {{ form.date_tried }}
+
+    <div class="mb-3">
+        {{ form.spirit_image.label_tag }}
+        {{ form.spirit_image }}
+    </div>
+
+    <div class="mb-3">
+        {{ form.text.label_tag }}
+        {{ form.text }}
+    </div>
+
+    <div class="mb-3">
+        {{ form.date_tried.label_tag }}
+        {{ form.date_tried }}
+    </div>
 
     <button type="submit" class="btn btn-primary mt-3">Submit Review</button>
 </form>

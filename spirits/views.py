@@ -25,7 +25,7 @@ def add_review(request, pk):
     ##get_object_or_404 is a Django shortcut that retrieves an object from the database based on the given model and primary key. If the object does not exist, it raises a 404 error.
     spirit = get_object_or_404(Spirit, pk=pk)
     if request.method == 'POST':
-        form = ReviewForm(request.POST)
+        form = ReviewForm(request.POST, request.FILES)
         if form.is_valid():
             ##Here this is establishing a relationship between the review and the user who submitted it, as well as the spirit that the review is about. The review is then saved to the database. This is presented in the spirit_detail view, which displays the details of a specific spirit along with its reviews.
             review = form.save(commit=False)
