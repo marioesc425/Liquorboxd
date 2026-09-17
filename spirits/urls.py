@@ -10,4 +10,5 @@ urlpatterns = [
     path('add/', views.add_spirit, name='add_spirit'),
     path('review/<int:pk>/edit/', views.edit_review, name='edit_review'),
     path('review/<int:pk>/delete/', views.delete_review, name='delete_review'),
+    path('wheel/', views.drink_wheel, name='drink_wheel'),
 ]

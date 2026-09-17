@@ -1,0 +1,49 @@
+{% extends 'core/base.html' %}
+
+{% block content %}
+<div class="text-center">
+    <h1 class="mb-4">🎡 What Should I Drink?</h1>
+    <button id="spin-btn" class="btn btn-primary btn-lg mb-4">Spin the Wheel</button>
+
+    <div id="wheel-display" class="mx-auto" style="max-width: 400px; min-height: 200px;">
+        <div id="spinning-text" class="fs-3 fw-bold" style="display: none;">🍸</div>
+        <div id="result-card" style="display: none;"></div>
+    </div>
+</div>
+
+<script>
+    const spirits = [
+        {% for spirit in spirits %}
+            { name: "{{ spirit.name|escapejs }}", brand: "{{ spirit.brand|escapejs }}", category: "{{ spirit.category|escapejs }}", pk: {{ spirit.pk }} },
+        {% endfor %}
+    ];
+
+    document.getElementById('spin-btn').addEventListener('click', () => {
+        const spinningText = document.getElementById('spinning-text');
+        const resultCard = document.getElementById('result-card');
+        resultCard.style.display = 'none';
+        spinningText.style.display = 'block';
+
+        let count = 0;
+        const interval = setInterval(() => {
+            const random = spirits[Math.floor(Math.random() * spirits.length)];
+            spinningText.textContent = `🍸 ${random.name}`;
+            count++;
+            if (count > 15) {
+                clearInterval(interval);
+                spinningText.style.display = 'none';
+                const winner = spirits[Math.floor(Math.random() * spirits.length)];
+                resultCard.innerHTML = `
+                    <div class="card">
+                        <div class="card-body">
+                            <h3>${winner.name}</h3>
+                            <p class="text-muted">${winner.brand} — ${winner.category}</p>
+                            <a href="/spirits/${winner.pk}/" class="btn btn-outline-primary">View Details</a>
+                        </div>
+                    </div>`;
+                resultCard.style.display = 'block';
+            }
+        }, 100);
+    });
+</script>
+{% endblock %}

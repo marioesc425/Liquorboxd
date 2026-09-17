@@ -6,6 +6,7 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from .serializers import SpiritSerializer
 from django.db.models import Avg
+import random
 from .models import Spirit, Review
 
 def spirit_list(request):
@@ -82,3 +83,7 @@ def delete_review(request, pk):
     spirit_pk = review.spirit.pk
     review.delete()
     return redirect('spirit_detail', pk=spirit_pk)
+
+def drink_wheel(request):
+    spirits = Spirit.objects.all()
+    return render(request, 'spirits/drink_wheel.html', {'spirits': spirits})

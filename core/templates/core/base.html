@@ -27,7 +27,7 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <div class="d-flex ms-auto mt-2 mt-lg-0">
                     <a class="nav-link text-light me-3" href="{% url 'spirit_list' %}">Browse</a>
-                    <a class="nav-link text-light me-3" href="{% url 'ai_tab' %}">🤖 Drinkbot</a>
+                    <a class="nav-link text-light me-3" href="{% url 'drink_wheel' %}">🎡 What to Drink</a>
                     {% if user.is_authenticated %}
                         <a class="nav-link text-light me-3" href="{% url 'profile' %}">{{ user.username }}</a>
                         <form method="post" action="{% url 'logout' %}" class="d-inline">
