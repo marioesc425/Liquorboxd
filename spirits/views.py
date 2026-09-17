@@ -5,6 +5,8 @@ from django.contrib.auth.decorators import login_required
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from .serializers import SpiritSerializer
+from django.db.models import Avg
+from .models import Spirit, Review
 
 def spirit_list(request):
     query = request.GET.get('q')    
@@ -16,8 +18,9 @@ def spirit_list(request):
 
 def spirit_detail(request, pk):
     spirit = get_object_or_404(Spirit, pk=pk)
-    review = spirit.review_set.all()
-    return render(request, 'spirits/spirit_detail.html', {'spirit': spirit, 'reviews': review})
+    reviews = spirit.review_set.all()
+    avg_rating = reviews.aggregate(Avg('rating'))['rating__avg']
+    return render(request, 'spirits/spirit_detail.html', {'spirit': spirit, 'reviews': reviews, 'average': avg_rating})
 
 @login_required
 def add_review(request, pk):
@@ -60,3 +63,22 @@ def add_spirit(request):
     else:
         form = SpiritForm()
     return render(request, 'spirits/add_spirit.html', {'form': form})
+
+@login_required
+def edit_review(request, pk):
+    review = get_object_or_404(Review, pk=pk, user=request.user)
+    if request.method == 'POST':
+        form = ReviewForm(request.POST, request.FILES, instance=review)
+        if form.is_valid():
+            form.save()
+            return redirect('spirit_detail', pk=review.spirit.pk)
+    else:
+        form = ReviewForm(instance=review)
+    return render(request, 'spirits/edit_review.html', {'form': form, 'review': review})
+
+@login_required
+def delete_review(request, pk):
+    review = get_object_or_404(Review, pk=pk, user=request.user)
+    spirit_pk = review.spirit.pk
+    review.delete()
+    return redirect('spirit_detail', pk=spirit_pk)

@@ -8,4 +8,6 @@ urlpatterns = [
     path('api/spirits/', views.spirit_list_api, name='spirit_list_api'),
     path('api/spirits/<int:pk>/', views.spirit_detail_api, name='spirit_detail_api'),
     path('add/', views.add_spirit, name='add_spirit'),
+    path('review/<int:pk>/edit/', views.edit_review, name='edit_review'),
+    path('review/<int:pk>/delete/', views.delete_review, name='delete_review'),
 ]

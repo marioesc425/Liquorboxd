@@ -13,6 +13,9 @@
             </div>
             <span class="badge bg-secondary">{{ spirit.category }}</span>
         </div>
+        {% if average %}
+            <p class="mb-2"><strong>Average Rating:</strong> {{ average|floatformat:1 }} 🍸 ({{ reviews.count }} review{{ reviews.count|pluralize }})</p>
+        {% endif %}
         <p class="mb-2"><strong>ABV:</strong> {{ spirit.abv }}%</p>
         <p class="mb-3">{{ spirit.description }}</p>
         <a href="{% url 'add_review' spirit.pk %}" class="btn btn-primary">Write a Review</a>
@@ -24,6 +27,10 @@
     <div class="card mb-3">
         <div class="card-body">
             <h6 class="card-title">{{ review.user.username }} — {{ review.rating }} 🍸</h6>
+                        {% if review.user == request.user %}
+                <a href="{% url 'edit_review' review.pk %}" class="btn btn-sm btn-outline-secondary">Edit</a>
+                <a href="{% url 'delete_review' review.pk %}" class="btn btn-sm btn-outline-danger" onclick="return confirm('Delete this review?')">Delete</a>
+            {% endif %}
             {% if review.spirit_image %}
                 <img src="{{ review.spirit_image.url }}" class="img-fluid rounded mb-2" style="max-height: 250px; object-fit: cover;">
             {% endif %}
