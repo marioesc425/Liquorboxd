@@ -4,12 +4,13 @@ from .models import Review, Spirit
 class ReviewForm(forms.ModelForm):
     class Meta:
         model = Review
-        fields = ['rating', 'spirit_image', 'text', 'date_tried']
+        fields = ['rating', 'spirit_image', 'text', 'date_tried', 'location']
         widgets = {
             'rating': forms.HiddenInput(),
             'spirit_image': forms.ClearableFileInput(attrs={'class': 'form-control'}),
             'text': forms.Textarea(attrs={'class': 'form-control', 'rows': 4}),
             'date_tried': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}),
+            'location': forms.HiddenInput(),
         }
 
 class SpiritForm(forms.ModelForm):

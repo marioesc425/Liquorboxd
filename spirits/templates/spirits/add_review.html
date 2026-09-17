@@ -46,6 +46,12 @@
         {{ form.date_tried }}
     </div>
 
+    <div class="mb-3">
+        <button type="button" id="detect-location-btn" class="btn btn-sm btn-outline-secondary">📍 Add My Location</button>
+        <span id="location-display" class="text-muted small ms-2"></span>
+    </div>
+    {{ form.location }}
+
     <button type="submit" class="btn btn-primary mt-3">Submit Review</button>
 </form>
 
@@ -111,5 +117,26 @@
     });
 
     renderRating(parseFloat(hiddenInput.value) || 0);
+
+    document.getElementById('detect-location-btn').addEventListener('click', () => {
+        if (!navigator.geolocation) {
+            alert('Geolocation is not supported by your browser.');
+            return;
+        }
+        navigator.geolocation.getCurrentPosition(async (position) => {
+            const lat = position.coords.latitude;
+            const lon = position.coords.longitude;
+            const response = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}`);
+            const data = await response.json();
+            const city = data.address.city || data.address.town || data.address.village || '';
+            const country = data.address.country || '';
+            const location = `${city}${city && country ? ', ' : ''}${country}`;
+
+            document.getElementById('id_location').value = location;
+            document.getElementById('location-display').textContent = location;
+        }, () => {
+            alert('Unable to retrieve your location.');
+        });
+    });
 </script>
 {% endblock %}

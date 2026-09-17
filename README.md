@@ -11,6 +11,9 @@ This is a personal learning project built to strengthen full-stack development s
 - **Accounts** — registration, login/logout, and a profile page with an editable bio and avatar
 - **Spirit catalog** — browse and search spirits by name; any logged-in user can add a new spirit (name, category, brand, ABV, description, photo)
 - **Reviews** — rate any spirit from 0–5 in half-point increments using a custom martini-glass rating widget (click to fill, click again for half, click again to clear), with optional written text, a photo, and a "date tried" that's independent of when the review was logged
+- **Location tagging** — optionally attach your current city/country to a review using the browser's Geolocation API and OpenStreetMap's reverse-geocoding service, with explicit opt-in via a button (never automatic)
+- **Edit/delete reviews** — users can edit or remove their own reviews, with permission checks so only the author can modify them
+- **Average ratings** — each spirit displays its average rating and review count, computed live from all submitted reviews
 - **Profile activity feed** — a Letterboxd-inspired profile layout showing your recent reviews as cards, plus a ratings distribution chart
 - **REST API** — read-only JSON endpoints for spirits (list and detail), built with Django REST Framework
 - **Database seeding** — a custom management command (`seed_spirits`) that populates the catalog with 15 real spirits across all five categories, safe to re-run without creating duplicates
@@ -19,7 +22,7 @@ This is a personal learning project built to strengthen full-stack development s
 
 - **Backend:** Python, Django
 - **Database:** PostgreSQL, containerized locally with Docker; hosted on Render in production
-- **Frontend:** Django templates, Bootstrap 5, vanilla JavaScript (for the martini rating widget and rating charts)
+- **Frontend:** Django templates, Bootstrap 5, vanilla JavaScript (for the martini rating widget, rating charts, and geolocation)
 - **API:** Django REST Framework
 - **Testing:** Django's test framework, run automatically via GitHub Actions CI on every push
 - **Deployment:** Render, with Gunicorn and WhiteNoise for static files
@@ -34,6 +37,7 @@ This is a personal learning project built to strengthen full-stack development s
 
 ### Reviews
 ![Reviews](screenshots/reviews.png)
+![Reviews](screenshots/blank.png)
 
 ### Profile
 ![Profile](screenshots/profile.png)
@@ -90,6 +94,7 @@ Building this project involved real, hands-on work with:
 - Debugging real production deployment issues — including environment variable mismatches between local and hosted environments, and the difference between a database's internal and external connection URLs
 - Setting up CI with GitHub Actions, including running tests against a live service container
 - Building a basic REST API layer with Django REST Framework
+- Working with browser-native APIs (Geolocation) and integrating a third-party web service (OpenStreetMap's Nominatim) via client-side JavaScript
 
 ## Future Ideas
 
