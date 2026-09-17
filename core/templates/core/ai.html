@@ -1,0 +1,47 @@
+{% extends 'core/base.html' %}
+
+{% block content %}
+
+<div class="container py-4">
+
+    <h1 class="mb-4">🤖 Beep Boop. I am Drinkbot. Ask me anything.</h1>
+
+    <form method="post" style="max-width: 600px;">
+        {% csrf_token %}
+
+        <textarea
+            name="question"
+            class="form-control mb-3"
+            rows="4"
+            placeholder="Ask Drinkbot something..."
+        >{{ question|default:"" }}</textarea>
+
+        <button type="submit" class="btn btn-primary">
+            Ask Drinkbot
+        </button>
+    </form>
+
+    {% if error %}
+        <div class="alert alert-danger mt-4" style="max-width: 600px;">
+            <strong>🤖 Drinkbot has malfunctioned:</strong><br>
+            {{ error }}
+        </div>
+    {% endif %}
+
+    {% if answer %}
+        <div class="card mt-4" style="max-width: 600px;">
+            <div class="card-body">
+
+                <h5 class="card-title">🤖 Drinkbot Says:</h5>
+
+                <p class="card-text">
+                    {{ answer|linebreaksbr }}
+                </p>
+
+            </div>
+        </div>
+    {% endif %}
+
+</div>
+
+{% endblock %}
